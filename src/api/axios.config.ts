@@ -1,3 +1,5 @@
+import { pageLoadingState } from "@/state";
+import { setRecoil } from "recoil-nexus";
 import { message } from "antd";
 import axios, {
   AxiosInstance,
@@ -8,6 +10,13 @@ import axios, {
   Method,
 } from "axios";
 
+// 创建一个全局 setter（手动控制 Recoil 状态）
+// let setRecoilLoading: any;
+
+// export const initializeRecoil = (aaa: any) => {
+//   console.log(111, aaa);
+//   // setRecoilLoading = set;
+// };
 // 定义接口返回数据的标准格式
 interface ApiResponse<T = any> {
   code: number;
@@ -84,14 +93,17 @@ function handleError(errorCode: number) {
     401: "未授权，请重新登录",
     403: "拒绝访问",
     404: "请求资源不存在",
-    500: "服务器错误",
+    500: "服务错误",
     502: "网关错误",
     503: "服务不可用",
     504: "网关超时",
   };
 
   const msg = messageMap[errorCode] || `连接出错(${errorCode})`;
-  message.error(msg);
+  setTimeout(() => {
+    setRecoil(pageLoadingState, false);
+    message.error(msg);
+  }, 1000);
 }
 
 interface RequestOptions<T> {

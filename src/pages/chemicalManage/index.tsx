@@ -15,7 +15,7 @@ import QueryForm from "./components/QueryForm";
 import { SorterResult } from "antd/es/table/interface";
 import AddForm from "./components/AddForm";
 import {
-  getSaltProduceList,
+  getManageAndUseList,
   SaltProduceListParams,
   SaltProduceListResRow,
   deleteSaltProduce,
@@ -109,9 +109,9 @@ const Index = () => {
       pageNum: tableParams.pagination!.current,
       pageSize: tableParams.pagination!.pageSize,
     } as SaltProduceListParams;
-    console.log(999, params);
+    // console.log(999, params);
     setLoading(true);
-    const result = await getSaltProduceList(params);
+    const result = await getManageAndUseList(params);
 
     setData(result.content);
     setLoading(false);

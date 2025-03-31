@@ -7,6 +7,7 @@ import ChemicalsPermit from "@/pages/chemicalsPermit";
 import SaltWholesale from "@/pages/saltWholesale";
 import SaltProduce from "@/pages/saltProduce";
 import SaltProduceMultispecies from "@/pages/saltProduceMultispecies";
+import ChemicalManage from "@/pages/chemicalManage";
 
 export type CustomRouteObject = RouteObject & {
   path: string;
@@ -46,6 +47,12 @@ const router: CustomRouteObject[] = [
     path: "/saltProduceMultispecies",
     element: <SaltProduceMultispecies />,
     label: "食盐定点生产企业证书(多品种)",
+    icon: <AlignLeftOutlined />,
+  },
+  {
+    path: "/chemicalManage",
+    element: <ChemicalManage />,
+    label: "第二类监控化学品许可证",
     icon: <AlignLeftOutlined />,
   },
 ];

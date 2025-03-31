@@ -10,7 +10,6 @@ import {
   Upload,
   UploadProps,
 } from "antd";
-import { UploadOutlined } from "@ant-design/icons";
 import {
   SaltProduceListResRow,
   addSaltProduce,
@@ -61,15 +60,7 @@ const AddForm: React.FC<IProps> = (props) => {
     },
   };
   return (
-    <div className="flex gap-3 flex-row items-center mb-3">
-      <Button type="primary" onClick={() => setIsModalOpen(true)}>
-        新增
-      </Button>
-      <Upload {...uploadProps}>
-        <Button type="primary" icon={<UploadOutlined />}>
-          导入
-        </Button>
-      </Upload>
+    <>
       <Modal
         title={props.formData ? "修改" : "新增"}
         open={isModalOpen}
@@ -97,7 +88,7 @@ const AddForm: React.FC<IProps> = (props) => {
         }}
         maskClosable={false}
       >
-        <div className="w-full py-4">
+        <div className="w-full">
           <Spin spinning={formLoading} fullscreen />
           <Form form={form} labelCol={{ span: 6 }} wrapperCol={{ span: 16 }}>
             <Form.Item
@@ -159,7 +150,11 @@ const AddForm: React.FC<IProps> = (props) => {
           </Form>
         </div>
       </Modal>
-    </div>
+      <Upload {...uploadProps}></Upload>
+      <Button type="primary" onClick={() => setIsModalOpen(true)}>
+        新增
+      </Button>
+    </>
   );
 };
 export default AddForm;
