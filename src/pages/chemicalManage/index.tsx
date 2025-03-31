@@ -35,6 +35,7 @@ interface TableParams {
 const Index = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [row, setRow] = useState<SaltProduceListResRow>();
+  const [isAddOpen, setIsAddOpen] = useState<boolean>(false);
   const columns: TableColumnsType<SaltProduceListResRow> = [
     {
       title: "序号",
@@ -42,14 +43,18 @@ const Index = () => {
       fixed: "left",
       width: "80px",
     },
-    { title: "名称", dataIndex: "name", width: 150, fixed: "left" },
-    { title: "个人名称", dataIndex: "personalName", width: 150 },
-    { title: "地址", dataIndex: "address", width: 280 },
-    { title: "生产地址", dataIndex: "produceAddress", width: 280 },
-    { title: "品种", dataIndex: "variety", width: 150 },
-    { title: "编码", dataIndex: "code", width: 150 },
-    { title: "数量", dataIndex: "number", width: 100 },
-    { title: "发证日期	", dataIndex: "releaseDate" },
+    {
+      title: "证书编号",
+      dataIndex: "certificateNo",
+      width: 280,
+      fixed: "left",
+    },
+    { title: "单位名称", dataIndex: "companyName", width: 150 },
+    { title: "法定代表人", dataIndex: "legalPerson", width: 280 },
+    { title: "单位地址", dataIndex: "companyAddress", width: 280 },
+    { title: "有效期限", dataIndex: "validity", width: 150 },
+    { title: "许可范围", dataIndex: "scope", width: 150 },
+    { title: "发证日期", dataIndex: "issueDate", width: 200 },
     {
       title: "操作",
       fixed: "right",
@@ -65,6 +70,7 @@ const Index = () => {
               variant="text"
               onClick={() => {
                 setRow(row);
+                setIsAddOpen(true);
               }}
             >
               修改
@@ -109,7 +115,6 @@ const Index = () => {
       pageNum: tableParams.pagination!.current,
       pageSize: tableParams.pagination!.pageSize,
     } as SaltProduceListParams;
-    // console.log(999, params);
     setLoading(true);
     const result = await getManageAndUseList(params);
 
@@ -147,15 +152,34 @@ const Index = () => {
       >
         <div className="w-full h-full">
           <div className="flex gap-2 flex-row items-center mb-3">
-            <AddForm
-              onFinish={() => init()}
-              formData={row}
-              onClose={() => setRow(undefined)}
-            />
+            {isAddOpen && (
+              <AddForm
+                open={isAddOpen}
+                onFinish={() => {
+                  init();
+                  setIsAddOpen(false);
+                }}
+                formData={row}
+                close={() => {
+                  setRow(undefined);
+                  setIsAddOpen(false);
+                }}
+              />
+            )}
+            <Button type="primary" onClick={() => setIsAddOpen(true)}>
+              新增
+            </Button>
             <Button type="primary" icon={<UploadOutlined />}>
               导入
             </Button>
-            <DownloadButton url="/api/saltProduce/exportSaltProduce" />
+            <DownloadButton
+              btnName="导出第二类监控化学品经营和使用许可证Excel"
+              url="/api/Chemical/exportManageAndUse"
+            />
+            <DownloadButton
+              btnName="导出第二类监控化学品经营-使用许可证PDF"
+              url="/api/Chemical/pdfManageAndUse"
+            />
           </div>
 
           <Table<SaltProduceListResRow>

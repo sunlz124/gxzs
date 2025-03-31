@@ -87,7 +87,7 @@ export const getManageAndUseList = (
   request("/api/Chemical/getManageAndUseList", { data });
 // 添加第二类监控化学品经营-使用许可证
 export const addManageAndUse = (data: ChemicalManageListResRow) =>
-  request("/api/Chemical/addManageAndUse1", {
+  request("/api/Chemical/addManageAndUse", {
     data,
     method: "POST",
   });

@@ -16,28 +16,28 @@ const QueryForm: React.FC<IProps> = (props) => {
         onFinish={props.search}
         className="flex gap-4 flex-row items-center"
       >
-        <Form.Item label="名称" name="name">
+        <Form.Item label="证书编号" name="certificateNo">
           <Input />
         </Form.Item>
-        <Form.Item label="个人名称" name="personalName">
+        <Form.Item label="单位名称" name="companyName">
           <Input />
         </Form.Item>
-        <Form.Item label="地址" name="address">
+        <Form.Item label="法定代表人" name="legalPerson">
           <Input />
         </Form.Item>
-        <Form.Item label="生产地址" name="produceAddress">
+        <Form.Item label="单位地址" name="companyAddress">
           <Input />
         </Form.Item>
-        <Form.Item label="品种" name="variety">
+        <Form.Item label="有效期限" name="validity">
           <Input />
         </Form.Item>
-        <Form.Item label="编码" name="code">
+        <Form.Item label="许可范围" name="scope">
           <Input />
         </Form.Item>
         <Form.Item label="数量" name="number">
           <Input />
         </Form.Item>
-        <Form.Item label="发证日期	" name="releaseDate">
+        <Form.Item label="发证日期	" name="issueDate">
           <DatePicker format="YYYY-MM-DD" />
         </Form.Item>
         <Form.Item>

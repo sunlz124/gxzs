@@ -24,7 +24,9 @@ interface ApiResponse<T = any> {
   message: string;
   success: boolean;
 }
-
+// const baseURL = import.meta.env.PROD
+//   ? location.origin
+//   : import.meta.env.VITE_APP_BASE_API;
 // 创建自定义配置的 Axios 实例
 const service: AxiosInstance = axios.create({
   baseURL: import.meta.env.VITE_APP_BASE_API,

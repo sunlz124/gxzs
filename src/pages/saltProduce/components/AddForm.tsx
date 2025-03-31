@@ -6,7 +6,6 @@ import {
   Input,
   message,
   Modal,
-  Spin,
   Upload,
   UploadProps,
 } from "antd";
@@ -16,6 +15,8 @@ import {
   updateSaltProduce,
 } from "@/api";
 import dayjs from "dayjs";
+import { useSetRecoilState } from "recoil";
+import { pageLoadingState } from "@/state";
 
 interface IProps {
   onFinish: () => void;
@@ -24,8 +25,8 @@ interface IProps {
 }
 const AddForm: React.FC<IProps> = (props) => {
   const [form] = Form.useForm();
+  const setLoading = useSetRecoilState(pageLoadingState);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [formLoading, setFormLoading] = useState(false);
   useEffect(() => {
     if (props.formData) {
       const { releaseDate } = props.formData;
@@ -46,16 +47,16 @@ const AddForm: React.FC<IProps> = (props) => {
     onChange(info) {
       console.log(11, info);
       // console.log(22, info);
-      setFormLoading(true);
+      setLoading(true);
       // if (info.file.status !== "uploading") {
       //   console.log(info.file, info.fileList);
       // }
       if (info.file.status === "done") {
         message.success(`${info.file.name} file uploaded successfully`);
-        setFormLoading(false);
+        setLoading(false);
       } else if (info.file.status === "error") {
         message.error(`${info.file.name} file upload failed.`);
-        setFormLoading(false);
+        setLoading(false);
       }
     },
   };
@@ -72,11 +73,11 @@ const AddForm: React.FC<IProps> = (props) => {
             id: props.formData?.id,
           };
           console.log(222, obj);
-          setFormLoading(true);
+          setLoading(true);
           const request = props.formData ? updateSaltProduce : addSaltProduce;
           const result = await request(obj);
           console.log(999, result);
-          setFormLoading(false);
+          setLoading(false);
           message.success(`${props.formData ? "修改" : "新增"}成功！`);
           setIsModalOpen(false);
           props.onFinish();
@@ -89,7 +90,6 @@ const AddForm: React.FC<IProps> = (props) => {
         maskClosable={false}
       >
         <div className="w-full">
-          <Spin spinning={formLoading} fullscreen />
           <Form form={form} labelCol={{ span: 6 }} wrapperCol={{ span: 16 }}>
             <Form.Item
               label="名称"

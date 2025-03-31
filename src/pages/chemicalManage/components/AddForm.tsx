@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Button, DatePicker, Form, Input, message, Modal } from "antd";
+import React, { useEffect } from "react";
+import { DatePicker, Form, Input, message, Modal } from "antd";
 import {
   ChemicalManageListResRow,
   addManageAndUse,
@@ -7,80 +7,68 @@ import {
 } from "@/api";
 import { useSetRecoilState } from "recoil";
 import { pageLoadingState } from "@/state";
+import dayjs from "dayjs";
 // import dayjs from "dayjs";
 
 interface IProps {
+  open: boolean;
   onFinish: () => void;
   formData?: ChemicalManageListResRow;
-  onClose: () => void;
+  close: () => void;
 }
 const AddForm: React.FC<IProps> = (props) => {
   const [form] = Form.useForm();
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  // const [formLoading, setFormLoading] = useState(false);
   const setLoading = useSetRecoilState(pageLoadingState);
   useEffect(() => {
-    if (props.formData) {
-      // const { releaseDate } = props.formData;
-      // const obj = {
-      //   ...props.formData,
-      //   releaseDate: dayjs(releaseDate),
-      // };
-      // console.log(1112, obj);
-      // form.setFieldsValue(obj);
-      // setIsModalOpen(true);
+    if (props.formData?.id) {
+      const values = {
+        ...props.formData,
+        id: props.formData.id,
+        issueDate: dayjs(props.formData.issueDate),
+        validity: dayjs(props.formData.validity),
+      };
+      form.setFieldsValue(values);
     }
-  }, [props.formData]);
+  }, []);
   // const [loading, setLoading] = useRecoilState(fullscreenLoading);
   return (
     <>
       <Modal
         title={props.formData ? "修改" : "新增"}
-        open={isModalOpen}
+        open={props.open}
         onOk={async () => {
-          // setLoading(true);
-          // setTimeout(() => {
-          //   setLoading(false);
-          // }, 2000);
-
-          // return;
           const res: any = await form.validateFields();
-          // const obj: ChemicalManageListResRow = {
-          //   ...res,
-          //   releaseDate: dayjs(res.releaseDate).format("YYYY-MM-DD"),
-          //   id: props.formData?.id,
-          // };
+          console.log(111, res);
           const values: ChemicalManageListResRow = {
             ...res,
+            id: props.formData?.id,
+            certificateNo: props.formData?.certificateNo,
             validity: res.validity!.format("YYYY-MM-DD"),
+            issueDate: res.issueDate!.format("YYYY-MM-DD"),
           };
           setLoading(true);
           const request = props.formData?.id
             ? editManageAndUse
             : addManageAndUse;
-          const result = await request(values);
-          console.log(999, result);
+          await request(values);
           setLoading(false);
           message.success(`${props.formData?.id ? "修改" : "新增"}成功！`);
-          setIsModalOpen(false);
+          props.close();
           props.onFinish();
         }}
         onCancel={() => {
+          props.close();
+        }}
+        afterClose={() => {
           form.resetFields();
-          props.onClose();
-          setIsModalOpen(false);
         }}
         maskClosable={false}
       >
         <div className="w-full">
           <Form form={form} labelCol={{ span: 6 }} wrapperCol={{ span: 16 }}>
-            <Form.Item
-              label="证书编号	"
-              name="certificateNo"
-              rules={[{ required: true, message: "请输入证书编号!" }]}
-            >
-              <Input />
-            </Form.Item>
+            {/* <Form.Item label="证书编号	" name="certificateNo">
+              <Input disabled={true} />
+            </Form.Item> */}
             <Form.Item
               label="单位名称"
               name="companyName"
@@ -133,9 +121,6 @@ const AddForm: React.FC<IProps> = (props) => {
           </Form>
         </div>
       </Modal>
-      <Button type="primary" onClick={() => setIsModalOpen(true)}>
-        新增
-      </Button>
     </>
   );
 };
