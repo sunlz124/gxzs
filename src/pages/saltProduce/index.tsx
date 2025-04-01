@@ -5,7 +5,6 @@ import {
   GetProp,
   message,
   Modal,
-  Table,
   TableColumnsType,
   TablePaginationConfig,
   TableProps,
@@ -22,6 +21,7 @@ import {
 } from "@/api/index";
 import { UploadOutlined } from "@ant-design/icons";
 import DownloadButton from "@/components/DownloadButton";
+import AutoTable from "@/components/AutoTable";
 
 const { confirm } = Modal;
 
@@ -155,18 +155,23 @@ const Index = () => {
             <Button type="primary" icon={<UploadOutlined />}>
               导入
             </Button>
-            <DownloadButton url="/api/saltProduce/exportSaltProduce" />
+            <DownloadButton
+              btnName="导出食盐生产表"
+              url="/api/saltProduce/exportSaltProduce"
+              params={queryParams}
+            />
+            <DownloadButton
+              btnName="导出食盐生产PDF"
+              url="/api/saltProduce/exportSaltProduce"
+              params={queryParams}
+            />
           </div>
-
-          <Table<SaltProduceListResRow>
-            className="w-full abc"
+          <AutoTable
             loading={loading}
             dataSource={data}
             columns={columns}
-            rowKey={(record) => record.id!}
             pagination={tableParams.pagination}
             onChange={handleTableChange}
-            scroll={{ x: "max-content" }}
           />
         </div>
       </Card>

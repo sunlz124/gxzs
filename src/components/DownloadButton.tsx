@@ -1,27 +1,31 @@
 import { DownloadOutlined } from "@ant-design/icons";
-import { Button } from "antd";
+import request from "@/api/axios.config";
+import { Button, message } from "antd";
 
 interface IProps {
   url: string;
   btnName?: string;
+  params?: any;
 }
 const DownloadButton: React.FC<IProps> = (props) => {
-  const exportFile = () => {
-    // console.log(111, import.meta.env.PROD, import.meta.env.DEV);
-    // const baseURL = import.meta.env.PROD
-    //   ? location.origin
-    //   : import.meta.env.VITE_APP_BASE_API;
+  const exportFile = async () => {
+    const { license } = window as any;
+    if (!license) {
+      message.error("请在客户端进行操作！");
+      return;
+    }
+    console.log(license);
+    const saveDirectory = await license.openDirectoryDialog();
+    if (!saveDirectory) {
+      return;
+    }
     const url = import.meta.env.VITE_APP_BASE_API + props.url;
-    console.log(111, url);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "download";
-    document.body.appendChild(a);
-    a.click();
-    setTimeout(() => {
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    }, 100);
+    const params = { ...props.params, path: `${saveDirectory}/` };
+    // console.log(url, params);
+    // const url = await getUrl();
+    const result = await request(url, { data: params });
+    console.log(result);
+    message.success(`下载成功！`);
   };
   return (
     <Button type="primary" icon={<DownloadOutlined />} onClick={exportFile}>

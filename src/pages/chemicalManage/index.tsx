@@ -5,7 +5,6 @@ import {
   GetProp,
   message,
   Modal,
-  Table,
   TableColumnsType,
   TablePaginationConfig,
   TableProps,
@@ -22,6 +21,7 @@ import {
 } from "@/api/index";
 import { UploadOutlined } from "@ant-design/icons";
 import DownloadButton from "@/components/DownloadButton";
+import AutoTable from "@/components/AutoTable";
 
 const { confirm } = Modal;
 
@@ -105,7 +105,7 @@ const Index = () => {
   const [tableParams, setTableParams] = useState<TableParams>({
     pagination: {
       current: 1,
-      pageSize: 10,
+      pageSize: 20,
     },
   });
   const [queryParams, setQueryParams] = useState<SaltProduceListResRow>();
@@ -145,56 +145,70 @@ const Index = () => {
     }
   };
   return (
-    <div className="w-full overflow-hidden ">
-      <Card
-        title={<QueryForm search={setQueryParams} />}
-        className="w-full h-full"
-      >
-        <div className="w-full h-full">
-          <div className="flex gap-2 flex-row items-center mb-3">
-            {isAddOpen && (
-              <AddForm
-                open={isAddOpen}
-                onFinish={() => {
-                  init();
-                  setIsAddOpen(false);
-                }}
-                formData={row}
-                close={() => {
-                  setRow(undefined);
-                  setIsAddOpen(false);
-                }}
-              />
-            )}
-            <Button type="primary" onClick={() => setIsAddOpen(true)}>
-              新增
-            </Button>
-            <Button type="primary" icon={<UploadOutlined />}>
-              导入
-            </Button>
-            <DownloadButton
-              btnName="导出第二类监控化学品经营和使用许可证Excel"
-              url="/api/Chemical/exportManageAndUse"
+    <Card
+      className="w-full h-full"
+      title={
+        <div id="page-header">
+          <QueryForm search={setQueryParams} />
+        </div>
+      }
+    >
+      <div className="w-full h-full overflow-hidden">
+        <div className="flex gap-2 flex-row items-center mb-3" id="page-button">
+          {isAddOpen && (
+            <AddForm
+              open={isAddOpen}
+              onFinish={() => {
+                init();
+                setIsAddOpen(false);
+              }}
+              formData={row}
+              close={() => {
+                setRow(undefined);
+                setIsAddOpen(false);
+              }}
             />
-            <DownloadButton
-              btnName="导出第二类监控化学品经营-使用许可证PDF"
-              url="/api/Chemical/pdfManageAndUse"
-            />
-          </div>
-
-          <Table<SaltProduceListResRow>
-            className="w-full abc"
-            loading={loading}
-            dataSource={data}
-            columns={columns}
-            rowKey={(record) => record.id!}
-            pagination={tableParams.pagination}
-            onChange={handleTableChange}
-            scroll={{ x: "max-content" }}
+          )}
+          <Button type="primary" onClick={() => setIsAddOpen(true)}>
+            新增
+          </Button>
+          <Button type="primary" icon={<UploadOutlined />}>
+            导入
+          </Button>
+          <DownloadButton
+            btnName="下载导入模板"
+            url="/api/Chemical/exportManageAndUse"
+          />
+          <DownloadButton
+            btnName="导出第二类监控化学品经营和使用许可证Excel"
+            url="/api/Chemical/exportManageAndUse"
+            params={queryParams}
+          />
+          <DownloadButton
+            btnName="导出第二类监控化学品经营-使用许可证PDF"
+            url="/api/Chemical/pdfManageAndUse"
           />
         </div>
-      </Card>
-    </div>
+        <AutoTable
+          loading={loading}
+          dataSource={data}
+          columns={columns}
+          pagination={tableParams.pagination}
+          onChange={handleTableChange}
+        />
+        {/* <Table<SaltProduceListResRow>
+          size="small"
+          className="w-full h-full"
+          loading={loading}
+          dataSource={data}
+          columns={columns}
+          rowKey={(record) => record.id!}
+          pagination={tableParams.pagination}
+          onChange={handleTableChange}
+          scroll={{ x: "max-content", y: pageTableHeight }}
+        /> */}
+      </div>
+    </Card>
   );
 };
 
